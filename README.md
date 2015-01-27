@@ -81,7 +81,7 @@ Then, `node client.js` prints out:
 }
 ```
 
-NOTE:  gasket does not yet reflect this format.  
+NOTE:  gasket does not yet reflect this format, but this is possible future version of gasket (that supports nestings and datscript command-types)
 
 ##License
 MIT
