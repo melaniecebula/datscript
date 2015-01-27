@@ -23,7 +23,7 @@ run echo END
 
 The following example (in `client.js`):
 
-```
+``` js
 var datscript = require('./')
 var fs = require('fs')
 
@@ -33,7 +33,7 @@ console.log(JSON.stringify(parsed, null, '\t'))
 
 Then, `node client.js` prints out:
 
-```
+``` JSON
 {
 	"gasket": [
 		{
