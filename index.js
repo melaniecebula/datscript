@@ -1,14 +1,32 @@
 var hackfile = require('hackfile')
 var fs = require('fs')
 
-var hackfileOutput = hackfile(fs.readFileSync('hackfile', 'utf-8'))
-
-//TODO:  multiple pipelines
 //TODO: dependencies
 //TODO: modules
-var pipelines = []
+var datscript = function(src) {
+  var parsed = hackfile(src)
+  var pipelines = parsed.map(visit)
+  var gasket = []
 
-var constructGasket = function(keyword, cmds) {
+  pipelines.forEach(function(pipeline) {
+    if (typeof pipeline[0] === "string") {
+      var line = {}
+      var commands = []
+      pipeline[1].forEach(function(cmd) {
+        commands = commands.concat(cmd.shift())
+      })
+      line[pipeline[0]] = commands
+      gasket.push(line)
+    } else {
+      gasket= gasket.concat(pipeline)
+    }
+  })
+
+  console.log(JSON.stringify({gasket: gasket}))
+  return {gasket: gasket}
+}
+
+var constructCommand = function(keyword, cmds) {
   var gasket = []
   cmds.forEach(function(cmd) {
     gasket.push({'type': keyword, 'command': cmd})
@@ -21,32 +39,24 @@ var visit = function(line) {
   var params = line[1]
 
   switch(cmd) {
-    case 'pipeline': //TODO: each pipeline is a separate gasket pipeline
-      var name = params.shift()
-      return 'pipeline ' + name + ' ' + params.map(visit)
+    case 'pipeline':
+      return ['pipeline ' + params.shift(), params.map(visit)]
     case 'run':
-      return constructGasket('run', params.map(visit))
+      return constructCommand('run', params.map(visit))
     case 'pipe':
-      return constructGasket('pipe', params.map(visit))
+      return constructCommand('pipe', params.map(visit))
     case 'map':
-      return constructGasket('map', params.map(visit))
+      return constructCommand('map', params.map(visit))
     case 'reduce':
-      return constructGasket('reduce', params.map(visit))
+      return constructCommand('reduce', params.map(visit))
     case 'background':
-      return constructGasket('background', params.map(visit))
+      return constructCommand('background', params.map(visit))
     case 'fork':
-      return constructGasket('fork', params.map(visit))
+      return constructCommand('fork', params.map(visit))
     default:
-      if (typeof line === "string") {
-        return line
-      }
+      if (typeof line === "string") return line
       return cmd + " " + params.join(" ")
-    }
   }
+}
 
-var output = {gasket: hackfileOutput.map(visit)[0]} //kind of hacky to grab 0th item in array
-
-console.log("hackfile output")
-console.log(JSON.stringify(hackfileOutput))
-console.log("gasket.json output")
-console.log(JSON.stringify(output))
+module.exports = datscript
