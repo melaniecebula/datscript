@@ -1,0 +1,26 @@
+{
+  "name": "datscript",
+  "version": "1.0.0",
+  "description": "Parser for the datscript format",
+  "main": "index.js",
+  "dependencies": {
+    "debug": "^2.1.1",
+    "hackfile": "4.0.0"
+  },
+  "devDependencies": {
+    "tape": "^3.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/melaniecebula/datscript.git"
+  },
+  "scripts": {
+    "test": "tape test/index.js"
+  },
+  "author": "Melanie Cebula (@melaniecebula)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/datscript/datscript/issues"
+  },
+  "homepage": "https://github.com/melaniecebula/datscript"
+}
